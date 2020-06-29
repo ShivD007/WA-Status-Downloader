@@ -16,38 +16,36 @@ class VideoScreen extends StatefulWidget {
 }
 
 class _VideoScreenState extends State<VideoScreen> {
-
- bool _isLoading;
+  bool _isLoading;
 
   @override
   void initState() {
     _isLoading = true;
 
-    Provider.of<ImageVideoProviders>(context, listen: false)
-        .getVid(widget.dir);
+    Provider.of<ImageVideoProviders>(context, listen: false).getVid(widget.dir);
 
-  _isLoading = false;
-
-    
+    _isLoading = false;
 
     super.initState();
   }
 
-
-
-
   @override
   Widget build(BuildContext context) {
-  final vidlist = Provider.of<ImageVideoProviders>(context, listen: true);
-  final g= Provider.of<ImageVideoProviders>(context, listen: true).getvideoList;
-  print("${g.length}.....................................................................................................uuuuuuuu");
+    final vidlist = Provider.of<ImageVideoProviders>(context, listen: true);
+    final g =
+        Provider.of<ImageVideoProviders>(context, listen: true).getvideoList;
 
     return Container(
-      child: !_isLoading ? g.length  == 0 ? 
-        Container(child: Center( child: CircularProgressIndicator(),)) 
-        :Grid(provider:vidlist, flag: widget.flag,) : 
-        Center(child:new CircularProgressIndicator()));
+        child: !_isLoading
+            ? g.length == 0
+                ? Container(
+                    child: Center(
+                    child: CircularProgressIndicator(),
+                  ))
+                : Grid(
+                    provider: vidlist,
+                    flag: widget.flag,
+                  )
+            : Center(child: new CircularProgressIndicator()));
   }
-    
-  }
-
+}

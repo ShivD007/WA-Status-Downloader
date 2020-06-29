@@ -40,16 +40,13 @@ class ImageVideoProviders with ChangeNotifier {
     } catch (e) {
       print(e);
     }
-    if (flag == 0) {
-      final imgtemp = _list.toList();
-      imgtemp.removeAt(_list.indexOf(filePath));
-      _list = imgtemp;
-      notifyListeners();
-    } else {
-      final vidtemp = _list.toList();
-      vidtemp.removeAt(_list.indexOf(filePath));
-      _list = vidtemp;
-      notifyListeners();
-    }
+    final _templist = (flag == 0) ? _list.toList() : _list1.toList();
+    _templist.removeAt(_templist.indexOf(filePath));
+
+    if (flag == 0)
+      _list = _templist;
+    else
+      _list1 = _templist;
+    notifyListeners();
   }
 }

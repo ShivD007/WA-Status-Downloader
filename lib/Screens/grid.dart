@@ -1,7 +1,7 @@
 import 'dart:io';
-import 'package:providert/view.dart';
-import 'package:thumbnails/thumbnails.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 import '../Providers/imageVideoProvider.dart';
 
 class Grid extends StatelessWidget {
@@ -9,104 +9,83 @@ class Grid extends StatelessWidget {
 
   final ImageVideoProviders provider;
   final int flag;
-  
+
   @override
   Widget build(BuildContext context) {
-    
-     List<String> _tempList=flag == 0 ? provider.getlist:provider.getvideoList;
-
-    _getImage(videoPathUrl) async {
-      String thumb = await Thumbnails.getThumbnail(
-          thumbnailFolder: '/storage/emulated/0/statusdownloader/.Thumbnails',
-          videoFile: videoPathUrl,
-          imageType:
-              ThumbFormat.PNG, //this image will store in created folderpath
-          quality: 5);
-      return thumb;
-    }
+    List<String> _tempList =
+        flag == 0 ? provider.getlist : provider.getvideoList;
 
     return GridView.builder(
-      
         shrinkWrap: true,
         itemCount: _tempList.length,
+        // scrollDirection: Axis.horizontal,
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
             childAspectRatio: 1,
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
             maxCrossAxisExtent: 140),
         itemBuilder: (ctx, index) {
-                return flag == 0
+          return flag == 0
               ? InkWell(
                   child: Container(
-                     child: Hero( tag: provider.getlist[index],
-                                              child: 
-                                              Image.file(
-                    File(provider.getlist[index]),
-                    fit: BoxFit.cover,
-                     filterQuality: FilterQuality.low,
-                  ),
-                       )
-                      ),
+                      child: Hero(
+                    tag: provider.getlist[index],
+                    child: Image.file(
+                      File(provider.getlist[index]),
+                      fit: BoxFit.cover,
+                      filterQuality: FilterQuality.low,
+                    ),
+                  )),
                   onTap: () {
-                    
-                             return Navigator.of(context).pushNamed("/view", arguments: {
-                  
-                  "index": index,
-                  "flag": flag
-                });
-                  
-
-
+                    return Navigator.of(context).pushNamed("/view",
+                        arguments: {"index": index, "flag": flag});
                   })
-              : FutureBuilder(
-                  future: _getImage(provider.getvideoList[index]),
-                  builder: (context, snapshot) {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.none:
-                        return Center(child: Text("Please Wait"));
-                        break;
-                      case ConnectionState.waiting:
-                        return Center(child: Image.asset("assets/images/200.gif"));
-                        break;
-                      case ConnectionState.active:
-                        return Center(child: Text("Please Wait"));
-                        break;
-                      case ConnectionState.done:
-                        if (snapshot.hasError) {
-                          return Center(child: Text(snapshot.error.toString()));
-                        } else {
-                          return InkWell(
-                                                      child: Image.file(
-                              File(snapshot.data),
-                              fit: BoxFit.cover,
-                               filterQuality: FilterQuality.low,
-                            ),
-
-                            onTap: (){
-                              print(snapshot.data);
-
-                             return Navigator.of(context).pushNamed("/view", arguments: {
-                  
-                  "index": index,
-                  "flag": flag
-                });
-                                  
-
-
-                          
-
-
-                            },
-                          );
-                        }
-                        break;
-                      default:
-                          return Image.file(
-                            File(snapshot.data),
-                            fit: BoxFit.cover,
-                          );
-                        }
-                  });
+              : InkWell(
+                  onTap: () {
+                    return Navigator.of(context).pushNamed("/view",
+                        arguments: {"index": index, "flag": flag});
+                  },
+                  child: ThumbNail(videoPath: _tempList[index]));
         });
+  }
+}
+
+class ThumbNail extends StatefulWidget {
+  final String videoPath;
+  ThumbNail({this.videoPath});
+
+  @override
+  _ThumbNailState createState() => _ThumbNailState();
+}
+
+class _ThumbNailState extends State<ThumbNail> {
+  VideoPlayerController _playerController;
+  @override
+  void initState() {
+    super.initState();
+    getThumbNail();
+  }
+
+  getThumbNail() async {
+    _playerController = VideoPlayerController.file(File(widget.videoPath));
+
+    await _playerController.initialize();
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _playerController?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _playerController.value.initialized
+        ? VideoPlayer(_playerController)
+        : Center(
+            child: CircularProgressIndicator(
+            backgroundColor: Colors.green,
+          ));
   }
 }

@@ -21,10 +21,7 @@ class _ImageScreenState extends State<ImageScreen> {
 
   @override
   void initState() {
-  
-      _isLoading = true;
-  
-    
+    _isLoading = true;
 
     Provider.of<ImageVideoProviders>(context, listen: false)
         .getData(widget.dir);
@@ -37,7 +34,6 @@ class _ImageScreenState extends State<ImageScreen> {
   @override
   Widget build(BuildContext context) {
     final imglist = Provider.of<ImageVideoProviders>(context, listen: true);
-    print("${imglist.getlist.length}.........................................................hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
     return !_isLoading
         ? Grid(provider: imglist, flag: widget.flag)
         : Center(child: CircularProgressIndicator());
