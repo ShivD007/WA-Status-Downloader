@@ -9,6 +9,7 @@ import 'package:store_launcher/store_launcher.dart';
 import '../Providers/tabindexProvider.dart';
 import 'package:providert/value_function.dart';
 import 'package:providert/Screens/videoScreen.dart';
+import 'package:android_intent/android_intent.dart';             
 
 //import 'package:permission_handler/permission_handler.dart';
 
@@ -21,6 +22,7 @@ class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
 
+ 
   @override
   void initState() {
     _tabController = new TabController(length: 2, vsync: this);
@@ -50,7 +52,13 @@ class _MyHomePageState extends State<MyHomePage>
                 width: 60,
                 child: FlatButton(
                   child: Image.asset("assets/images/wa.png"),
-                  onPressed: () {},
+                  onPressed: ()  {
+                  
+                  AndroidIntent intent = AndroidIntent( data:  Uri.encodeFull("https://api.whatsapp.com/"), action: "action_view" , package: "com.android.chrome");
+    intent.launch();
+ 
+
+                  },
                 ))
           ],
           elevation: 0,
@@ -259,7 +267,7 @@ class _HomebodyState extends State<Homebody> {
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold)),
                   ),
-                  Flexible(child: ImageScreen(flag: 0, dir: widget.dir)),
+                  Expanded(child: ImageScreen(flag: 0, dir: widget.dir)),
                   Padding(
                     padding: const EdgeInsets.all(10),
                     child: Text("Video",

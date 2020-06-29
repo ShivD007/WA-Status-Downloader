@@ -35,7 +35,7 @@ class _ImageScreenState extends State<ImageScreen> {
   Widget build(BuildContext context) {
     final imglist = Provider.of<ImageVideoProviders>(context, listen: true);
     return !_isLoading
-        ? Grid(provider: imglist, flag: widget.flag)
+        ?  imglist.getlist.isEmpty ? Container(child: Image.asset("assets/images/nodata.png"),) :Grid(provider: imglist, flag: widget.flag)
         : Center(child: CircularProgressIndicator());
   }
 }

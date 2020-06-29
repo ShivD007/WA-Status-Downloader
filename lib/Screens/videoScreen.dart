@@ -38,9 +38,9 @@ class _VideoScreenState extends State<VideoScreen> {
     return Container(
         child: !_isLoading
             ? g.length == 0
-                ? Container(
+                ?   Container(
                     child: Center(
-                    child: CircularProgressIndicator(),
+                    child: Image.asset("assets/images/nodata.png"),
                   ))
                 : Grid(
                     provider: vidlist,

@@ -18,7 +18,7 @@ class Grid extends StatelessWidget {
     return GridView.builder(
         shrinkWrap: true,
         itemCount: _tempList.length,
-        // scrollDirection: Axis.horizontal,
+        scrollDirection: Axis.horizontal,
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
             childAspectRatio: 1,
             crossAxisSpacing: 10,
